@@ -1,26 +1,25 @@
 const express = require('express');
 const routes = require('./routes');
-const mongoose = require('mongoose');
 require('dotenv').config({ path: 'variables.env' });
-
+require('./config/db');
 //Crear el servidor.
 const app = express();
-//Conectar a MongoDB 
-mongoose.Promise = global.Promise;
-mongoose.connect(process.env.DB_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
 
+
+const MongoClient = require('mongodb').MongoClient;
+const uri = "mongodb+srv://carlos:Kar2La30@cluster0.f6c9w.mongodb.net/activity1?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+client.connect(err => {
+  const collection = client.db("activity1").collection("users");
+  // perform actions on the collection object
+  client.close();
 });
+
 //Habilitar bodyParser
 app.use(express.json());
 app.use(express.urlencoded({
   extended: true
 }));
-
-
 
 // CORS
 app.use(function (req, res, next) {
